@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const userRoutes = require('./routes/userRoute');
 const eventRoutes = require('./routes/eventRoute');
+const ticketRoutes = require('./routes/ticketRoute');
 
 const PORT = process.env.APP_PORT || 5000;
 
@@ -13,6 +14,7 @@ app.use(express.json());
 
 app.use('/api/users', userRoutes);
 app.use('/api/events', eventRoutes);
+app.use('/api/tickets', ticketRoutes);
 
 mongoose.connect(process.env.DB_URL, {
   useNewUrlParser: true,

@@ -13,22 +13,26 @@ const TicketSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
-  user: {
+  purchaser: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
-  ticketType: {
+  type: {
     type: String,
-    required: true,
+    enum: ['Free', 'Paid', 'VIP'],
+    required: true
   },
-  qrCode: {
-    type: String,
-    unique: true,
-    required: true,
+  price: {
+    type: Number,
+    required: true
   },
   purchaseDate: {
     type: Date,
     default: Date.now,
+  },
+  quantity: {
+    type: Number,
+    required: true
   }
 }, options);
 

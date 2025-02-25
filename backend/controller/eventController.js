@@ -4,6 +4,17 @@ const mongoose = require('mongoose');
 exports.createEvent = async (req, res) => {
   const { title, description, location, date, time, category, ticketDetails } = req.body;
   try {
+    const tDetails =  ()=>{
+      const finalArray = [];
+      for (const tData of ticketDetails) {
+        const ticketDetail = {};
+        ticketDetail["type"] = tData["type"];
+        ticketDetail["price"] = parseInt(tData["price"]);
+        ticketDetail["availability"] = parseInt(tData["availability"]);
+        finalArray.push(ticketDetail)
+      } 
+      return finalArray
+    };
     const payload = {
         title, 
         description, 
@@ -11,11 +22,7 @@ exports.createEvent = async (req, res) => {
         date: new Date(date), 
         time, 
         category, 
-        ticketDetails: {
-          type: ticketDetails.type,
-          price: parseInt(ticketDetails.price),
-          availability: parseInt(ticketDetails.availability)
-        }, 
+        ticketDetails: tDetails(), 
         organizer: req.user.id
     }
     const newEvent = await Event.create(payload);

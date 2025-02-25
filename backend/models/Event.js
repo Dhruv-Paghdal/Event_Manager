@@ -37,7 +37,7 @@ const EventSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
-  ticketDetails: {
+  ticketDetails: [{
       type: {
         type: String,
         enum: ['Free', 'Paid', 'VIP'],
@@ -53,7 +53,7 @@ const EventSchema = new mongoose.Schema({
         type: Number,
         required: true,
       }
-  },
+  }],
   isRecurring: {
     type: Boolean,
     default: false,
