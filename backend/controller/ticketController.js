@@ -9,6 +9,11 @@ exports.purchaseTicket = async (req, res) => {
       return res.status(404).json({ status: 404, message: 'Event not found', data: "" });
     }
 
+    const existingRegistration = await Ticket.findOne({ event: eventId, purchaser: req.user._id });
+    if (existingRegistration) {
+      return res.status(400).json({ status: 400, message: 'User already registered for this event', data: "" });
+    }
+
     const ticket = event.ticketDetails.find(t => t.type === ticketType);
     if (!ticket || ticket.availability < parseInt(quantity)) {
       return res.status(400).json({ status: 400, message: 'Not enough tickets available', data: "" });
@@ -16,14 +21,14 @@ exports.purchaseTicket = async (req, res) => {
 
     ticket.availability -= parseInt(quantity);
     await event.save();
-    const newTicket = new Ticket({
+    const ticketPayload = {
       event: eventId,
-      purchaser: req.user.id,
+      purchaser: req.user._id,
       type: ticketType,
-      price: ticket.price || 0,
-      quantity: parseInt(quantity)
-    });
-    await newTicket.save();
+      price: parseInt(ticket.price) || 0,
+      quantity:parseInt(quantity)
+    }
+    const newTicket = await Ticket.create(ticketPayload);
     return res.status(201).json({ status: 201, message: 'Tickets purchased successfully', data: newTicket });
   } catch (error) {  
     return res.status(500).json({ status: 500, message: 'Ticket purchase failed', data: "" });
@@ -37,7 +42,7 @@ exports.getTicketsByEvent = async (req, res) => {
       if (!event) {
         return res.status(404).json({ status: 404, message: 'Event not found', data: "" });
       }
-      if (event.organizer.toString() !== req.user.id) {
+      if (event.organizer.toString() !== req.user._id) {
         return res.status(403).json({ status: 403, message: 'Unauthorized', data: "" });
       }
   

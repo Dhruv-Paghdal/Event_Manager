@@ -23,7 +23,7 @@ exports.createEvent = async (req, res) => {
         time, 
         category, 
         ticketDetails: tDetails(), 
-        organizer: req.user.id
+        organizer: req.user._id
     }
     const newEvent = await Event.create(payload);
     if(!newEvent) {
@@ -31,7 +31,6 @@ exports.createEvent = async (req, res) => {
     }
     return res.status(201).json({ status: 201, message: "Event created successfully", data: newEvent});
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ status: 500, message: "Event creation failed", data: "" });
   }
 };
@@ -109,8 +108,6 @@ exports.getEventById = async (req, res) => {
     }
     return res.status(200).json({ status: 200, message: "Event fetched successfully", data: event[0] });
   } catch (error) {
-    console.log(error);
-    
     return res.status(500).json({ status: 500, message: "Failed to fetch event", data: "" });
   }
 };
@@ -122,7 +119,7 @@ exports.updateEvent = async (req, res) => {
     if (!event) {
       return res.status(404).json({ status: 404, message: "Event not found", data: "" });
     }
-    if (event.organizer.toString() !== req.user.id) {
+    if (event.organizer.toString() !== req.user._id) {
       return res.status(403).json({ status: 403, message: "Unauthorized to edit event", data: "" });
     }
     const updatedEvent = await Event.findByIdAndUpdate(eventId, req.body, { new: true });
@@ -139,7 +136,7 @@ exports.deleteEvent = async (req, res) => {
     if (!event) {
       return res.status(404).json({ status: 404, message: "Event not found", data: "" });
     }
-    if (event.organizer.toString() !== req.user.id) {
+    if (event.organizer.toString() !== req.user._id) {
       return res.status(403).json({ status: 403, message: "Unauthorized", data: "" });
     }
     await Event.findByIdAndDelete(eventId);
