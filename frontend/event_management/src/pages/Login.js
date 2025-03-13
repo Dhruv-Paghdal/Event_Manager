@@ -10,7 +10,7 @@ const Login = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleLogin = async (e) => {  
     e.preventDefault();
     setError("");
 
@@ -19,9 +19,8 @@ const Login = () => {
         email,
         password,
       });
-
+      
       localStorage.setItem("token", response.data.data.token);
-      alert("Login successful!");
       navigate("/dashboard");
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");
