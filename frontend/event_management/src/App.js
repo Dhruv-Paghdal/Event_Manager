@@ -8,55 +8,59 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import PurchaseTicket from "./pages/PurchaseTicket";
 import UserTickets from "./pages/UserTickets";
 import EventTicketSales from "./pages/EventTicketSales";
+import Navbar from "./components/Navbar";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route 
-          path="/events" 
-          element={
-            <ProtectedRoute>
-              <EventManagement />
-            </ProtectedRoute>
-          } 
-        />
-        <Route 
-          path="/purchase/:eventId" 
-          element={
-            <ProtectedRoute>
-              <PurchaseTicket />
-            </ProtectedRoute>
-          } 
-        />
-        <Route 
-          path="/my-tickets" 
-          element={
-            <ProtectedRoute>
-              <UserTickets />
-            </ProtectedRoute>
-          } 
-        />
-        <Route 
-          path="/sales/:eventId" 
-          element={
-            <ProtectedRoute>
-              <EventTicketSales />
-            </ProtectedRoute>
-          } 
-        />
-      </Routes>
-    </Router>
+    <>
+      <Navbar />
+      <Router>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute allowedRoles={["Organizer"]}>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route 
+            path="/events" 
+            element={
+              <ProtectedRoute allowedRoles={["Organizer"]}>
+                <EventManagement />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/purchase/:eventId" 
+            element={
+              <ProtectedRoute allowedRoles={["Attendee"]}>
+                <PurchaseTicket />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/my-tickets" 
+            element={
+              <ProtectedRoute>
+                <UserTickets />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/sales/:eventId" 
+            element={
+              <ProtectedRoute allowedRoles={["Organizer"]}>
+                <EventTicketSales />
+              </ProtectedRoute>
+            } 
+          />
+        </Routes>
+      </Router>
+    </>
   );
 }
 
